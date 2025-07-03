@@ -27,8 +27,9 @@
 - https://habr.com/ru/articles/259055/
 
 ## Запуск приложения
- Для запуска приложения необходимо задать переменные окружения указанные в [application-sensitive.yaml](src/main/resources/application-sensitive.yaml)
-
+ Для запуска приложения необходимо задать переменные окружения указанные в [application-sensitive.yaml](src/main/resources/application-sensitive.yaml).
+ Мои переменные окружения прописаны в Environment variables конфигурации запуска JiraRushApplication
+---
 ## Список выполненных задач:
 1. Разобраться со структурой проекта (onboarding). 
  - Выполнено
