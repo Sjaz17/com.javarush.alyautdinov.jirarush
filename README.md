@@ -28,7 +28,7 @@
 
 ## Запуск приложения
  Для запуска приложения необходимо задать переменные окружения указанные в [application-sensitive.yaml](src/main/resources/application-sensitive.yaml).
- Мои переменные окружения прописаны в Environment variables конфигурации запуска JiraRushApplication
+ Мои переменные окружения прописаны в самой IDEA в Environment variables конфигурации запуска JiraRushApplication
 ---
 ## Список выполненных задач:
 1. Разобраться со структурой проекта (onboarding). 
