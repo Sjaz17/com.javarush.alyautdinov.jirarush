@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.javarush.jira.common.internal.config.SecurityConfig.PASSWORD_ENCODER;
 import static com.javarush.jira.common.util.JsonUtil.writeValue;
@@ -22,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -108,7 +108,7 @@ class UserControllerTest extends AbstractControllerTest {
         User dbUserAfter = repository.getExistedByEmail(USER_MAIL);
         assertEquals(dbUserBefore.getPassword(), dbUserAfter.getPassword(), "user's password must not be changed");
         User updated = getUpdated();
-        updated.setRoles(dbUserBefore.getRoles());   // user's roles must not be changed
+        updated.setRoles(dbUserBefore.getRoles());
         USER_MATCHER.assertMatch(dbUserAfter, updated);
     }
 

@@ -2,8 +2,10 @@ package com.javarush.jira;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@SpringBootTest()
 @ActiveProfiles("test")
+@Transactional
 abstract class BaseTests {
 }

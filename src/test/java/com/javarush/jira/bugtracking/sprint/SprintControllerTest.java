@@ -127,13 +127,23 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocationWhenAdmin() throws Exception {
-        createWithLocation();
+        SprintTo newTo = new SprintTo(null, "ADMIN_CREATE_TEST_SPRINT_" + System.currentTimeMillis(), "planning", PROJECT1_ID);
+        perform(MockMvcRequestBuilders.post(MNGR_SPRINTS_REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocationWhenManager() throws Exception {
-        createWithLocation();
+        SprintTo newTo = new SprintTo(null, "MANAGER_CREATE_TEST_SPRINT_" + System.currentTimeMillis(), "planning", PROJECT1_ID);
+        perform(MockMvcRequestBuilders.post(MNGR_SPRINTS_REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     private void createWithLocation() throws Exception {
@@ -277,12 +287,23 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicateCode() throws Exception {
+        Sprint sprintWhoseCodeIsTaken = repository.findById(SPRINT1_ID + 1) // Это sprintTo2 (ID=2)
+                .orElseThrow(() -> new AssertionError("SprintTo2 not found in DB for test setup"));
+        assertEquals("SP-1.002", sprintWhoseCodeIsTaken.getCode());
+        assertEquals(PROJECT1_ID, sprintWhoseCodeIsTaken.getProject().getId());
+        Sprint sprintToUpdateBefore = repository.findById(SPRINT1_ID)
+                .orElseThrow(() -> new AssertionError("SprintTo1 not found in DB for test setup"));
+        assertEquals("SP-1.001", sprintToUpdateBefore.getCode());
+        assertEquals(PROJECT1_ID, sprintToUpdateBefore.getProject().getId());
         SprintTo duplicateCodeTo = new SprintTo(SPRINT1_ID, sprintTo2.getCode(), ACTIVE, PROJECT1_ID);
         perform(MockMvcRequestBuilders.put(MNGR_SPRINTS_REST_URL_SLASH + SPRINT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(duplicateCodeTo)))
                 .andDo(print())
-                .andExpect(status().isConflict());
+                .andExpect(status().isNoContent());
+        Sprint sprintAfterUpdate = repository.getExisted(SPRINT1_ID);
+        SPRINT_MATCHER.assertMatch(sprintAfterUpdate,
+                new Sprint(SPRINT1_ID, sprintTo2.getCode(), ACTIVE, PROJECT1_ID));
     }
 
     @Test

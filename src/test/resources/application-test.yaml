@@ -1,8 +1,67 @@
-spring.cache.type: none
 spring:
-  init:
-    mode: always
+  liquibase:
+    changeLog: "classpath:changelog_h2.sql"
+    enabled: true
+    url: jdbc:h2:mem:jiradTestDB;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;NON_KEYWORDS=value
+    user: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+      schema-locations:
+      data-locations: "classpath:data.sql"
+
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+    database-platform: org.hibernate.dialect.H2Dialect
+
   datasource:
-    url: jdbc:postgresql://localhost:5433/jira-test
-    username: jira
-    password: JiraRush
+    h2:
+      url: jdbc:h2:mem:jiradTestDB;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+
+  cache:
+    type: none
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: test-github-id
+            client-secret: test-github-secret
+          google:
+            client-id: test-google-id
+            client-secret: test-google-secret
+          gitlab:
+            client-id: test-gitlab-id
+            client-secret: test-gitlab-secret
+
+  mail:
+    host: localhost
+    port: 3025
+    username: testuser@example.com
+    password: testpassword
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+app:
+  host-url: http://localhost:8081
+  test-mail: test-jira4jr@example.com
+  templates-update-cache: 0s

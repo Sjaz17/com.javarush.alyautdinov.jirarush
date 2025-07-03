@@ -3,6 +3,8 @@ package com.javarush.jira.common.internal.web;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.BindException;
@@ -14,6 +16,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(annotations = RestController.class)
 @AllArgsConstructor
 public class RestExceptionHandler extends BasicExceptionHandler {
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail conflict(DataIntegrityViolationException ex, HttpServletRequest request) {
+        return processException(ex, request,
+                (e, type, msg, r) -> createProblemDetail(e, HttpStatus.CONFLICT, msg));
+    }
 
     @ExceptionHandler(BindException.class)
     public ProblemDetail bindException(BindException ex, HttpServletRequest request) {
